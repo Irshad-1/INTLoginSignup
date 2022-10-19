@@ -7,26 +7,21 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  useColorScheme,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text} from 'react-native';
 import {Login} from './Components/Login';
+import {NavigationContainer} from '@react-navigation/native';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <ScrollView>
-      <Text style={styles.heading}>INT Login SignUp</Text>
-      <Login />
-    </ScrollView>
+    <NavigationContainer>
+      <ScrollView>
+        <Text style={styles.heading}>INT Login SignUp</Text>
+        <Login />
+      </ScrollView>
+    </NavigationContainer>
   );
 };
 

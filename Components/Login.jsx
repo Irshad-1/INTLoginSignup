@@ -2,8 +2,43 @@ import React from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {TextInput, Button, StyleSheet, View, Text} from 'react-native';
+import {AsyncStorage} from 'react-native';
 
 export const Login = () => {
+  const handleLogin = async ({email, password}) => {
+    try {
+      let res = await fetch('https://int-signup-login.herokuapp.com/login', {
+        method: 'POST',
+        body: JSON.stringify({email, password}),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      res = await res.json();
+      if (res.token) {
+        await AsyncStorage.setItem('intechnology', res.token);
+        toast({
+          title: 'Log In successful',
+          description: 'Logged In successfully redirecting to homepage',
+          status: 'success',
+          duration: 4000,
+          isClosable: true,
+        });
+        navigate('../');
+      } else {
+        toast({
+          title: 'Invalid details',
+          description: 'Wrong Login Details',
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View styles={styles.formWrapper}>
       <Formik
@@ -22,8 +57,8 @@ export const Login = () => {
           handleChange,
           errors,
           handleBlur,
-          handleSubmit,
           values,
+          handleSubmit,
           touched,
         }) => (
           <View>
