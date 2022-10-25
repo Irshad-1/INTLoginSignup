@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import {TextInput, Button, StyleSheet, View, Text} from 'react-native';
 import {AsyncStorage} from 'react-native';
 
-export const Login = () => {
+export const Login = ({navigation}) => {
   const handleLogin = async ({email, password}) => {
     try {
       let res = await fetch('https://int-signup-login.herokuapp.com/login', {
@@ -17,22 +17,27 @@ export const Login = () => {
       res = await res.json();
       if (res.token) {
         await AsyncStorage.setItem('intechnology', res.token);
-        toast({
-          title: 'Log In successful',
-          description: 'Logged In successfully redirecting to homepage',
-          status: 'success',
-          duration: 4000,
-          isClosable: true,
-        });
-        navigate('../');
+        // eslint-disable-next-line no-alert
+        alert(
+          JSON.stringify({
+            title: 'Log In successful',
+            description: 'Logged In successfully redirecting to homepage',
+            status: 'success',
+            duration: 4000,
+            isClosable: true,
+          }),
+        );
       } else {
-        toast({
-          title: 'Invalid details',
-          description: 'Wrong Login Details',
-          status: 'error',
-          duration: 4000,
-          isClosable: true,
-        });
+        // eslint-disable-next-line no-alert
+        alert(
+          JSON.stringify({
+            title: 'Invalid details',
+            description: 'Wrong Login Details',
+            status: 'error',
+            duration: 4000,
+            isClosable: true,
+          }),
+        );
       }
     } catch (error) {
       console.log(error);

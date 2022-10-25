@@ -10,6 +10,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, Text} from 'react-native';
 import {Login} from './Components/Login';
 import {NavigationContainer} from '@react-navigation/native';
+import {Signup} from './Components/Signup';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -19,7 +20,7 @@ const App = () => {
     <NavigationContainer>
       <ScrollView>
         <Text style={styles.heading}>INT Login SignUp</Text>
-        <Login />
+        <Signup />
       </ScrollView>
     </NavigationContainer>
   );
