@@ -27,6 +27,7 @@ export const Login = ({navigation}) => {
             isClosable: true,
           }),
         );
+        navigation.navigate('Details');
       } else {
         // eslint-disable-next-line no-alert
         alert(
@@ -43,6 +44,14 @@ export const Login = ({navigation}) => {
       console.log(error);
     }
   };
+  React.useEffect(() => {
+    (async () => {
+      let token = await AsyncStorage.getItem('intechnology');
+
+      if (token) navigation.navigate('Details');
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View styles={styles.formWrapper}>
@@ -83,7 +92,15 @@ export const Login = ({navigation}) => {
               style={styles.inputTag}
             />
             <Text>{touched.password && errors.password}</Text>
-            <Button onPress={handleSubmit} title="Submit" />
+            <View styles={styles.buttonWrapper}>
+              <Button onPress={handleSubmit} title="Submit" />
+              <Button
+                onPress={() => {
+                  navigation.navigate('Signup');
+                }}
+                title="Signup"
+              />
+            </View>
           </View>
         )}
       </Formik>
@@ -93,13 +110,16 @@ export const Login = ({navigation}) => {
 
 const styles = StyleSheet.create({
   inputTag: {
-    fontSize: 25,
+    fontSize: 20,
     borderWidth: 2,
     borderColor: '#ddd',
   },
   formWrapper: {
-    width: '80%',
-    margin: 'auto',
-    backgroundColor: 'green',
+    width: '50%',
+  },
+  buttonWrapper: {
+    flexDirection: 'row',
+    padding: '5',
+    width: '30',
   },
 });

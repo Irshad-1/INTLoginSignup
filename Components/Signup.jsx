@@ -6,7 +6,7 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import * as Yup from 'yup';
 
-export const Signup = () => {
+export const Signup = ({navigation}) => {
   const handleSignUp = async ({name, age, gender, role, email, password}) => {
     try {
       let res = await fetch(
@@ -42,6 +42,7 @@ export const Signup = () => {
             isClosable: true,
           }),
         );
+        navigation.navigate('Login');
       }
     } catch (error) {
       console.log(error);
@@ -49,7 +50,7 @@ export const Signup = () => {
   };
 
   return (
-    <View styles={styles.formWrapper}>
+    <View style={styles.formWrapper}>
       <Formik
         initialValues={{
           name: '',
@@ -88,7 +89,7 @@ export const Signup = () => {
                 onChangeText={handleChange('name')}
                 style={styles.inputTag}
               />
-              <Text>{touched.name && errors.name}</Text>
+              <Text style={styles.error}>{touched.name && errors.name}</Text>
               <TextInput
                 placeholder="Enter age"
                 onBlur={handleBlur('age')}
@@ -97,9 +98,11 @@ export const Signup = () => {
                 style={styles.inputTag}
                 keyboardType="numeric"
               />
-              <Text>{touched.age && errors.age}</Text>
+              <Text style={styles.error}>{touched.age && errors.age}</Text>
 
-              {/* <RNPickerSelect
+              <RNPickerSelect
+                style={pickerSelectStyles}
+                useNativeAndroidPickerStyle={false}
                 onValueChange={handleChange('gender')}
                 items={[
                   {label: 'Male', value: 'male'},
@@ -107,13 +110,15 @@ export const Signup = () => {
                 ]}
               />
               <RNPickerSelect
+                style={pickerSelectStyles}
+                useNativeAndroidPickerStyle={false}
                 onValueChange={handleChange('role')}
                 items={[
                   {label: 'Developer', value: 'developer'},
                   {label: 'Project Manager', value: 'project manager'},
                   {label: 'Team lead', value: 'team lead'},
                 ]}
-              /> */}
+              />
 
               <TextInput
                 placeholder="Enter email"
@@ -122,7 +127,7 @@ export const Signup = () => {
                 onChangeText={handleChange('email')}
                 style={styles.inputTag}
               />
-              <Text>{touched.email && errors.email}</Text>
+              <Text style={styles.error}>{touched.email && errors.email}</Text>
 
               <TextInput
                 placeholder="Enter password"
@@ -131,7 +136,9 @@ export const Signup = () => {
                 onChangeText={handleChange('password')}
                 style={styles.inputTag}
               />
-              <Text>{touched.password && errors.password}</Text>
+              <Text style={styles.error}>
+                {touched.password && errors.password}
+              </Text>
               <Button onPress={handleSubmit} title="Submit" />
             </View>
           );
@@ -146,10 +153,20 @@ const styles = StyleSheet.create({
     fontSize: 25,
     borderWidth: 2,
     borderColor: '#ddd',
+    color: 'black',
+    backgroundColor: 'white',
   },
-  formWrapper: {
-    width: '80%',
-    margin: 'auto',
-    backgroundColor: 'green',
+  error: {
+    color: 'red',
+  },
+});
+const pickerSelectStyles = StyleSheet.create({
+  inputAndroid: {
+    fontSize: 25,
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: '#ddd',
+    marginBottom: 10,
+    color: 'black',
   },
 });
