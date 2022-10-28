@@ -2,7 +2,7 @@ import React from 'react';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {TextInput, Button, StyleSheet, View, Text} from 'react-native';
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Login = ({navigation}) => {
   const handleLogin = async ({email, password}) => {
@@ -15,16 +15,15 @@ export const Login = ({navigation}) => {
         },
       });
       res = await res.json();
+      console.log(res.token);
       if (res.token) {
-        await AsyncStorage.setItem('intechnology', res.token);
+        res = await AsyncStorage.setItem('intechnology', res.token);
+        console.log('res', res);
         // eslint-disable-next-line no-alert
         alert(
           JSON.stringify({
             title: 'Log In successful',
             description: 'Logged In successfully redirecting to homepage',
-            status: 'success',
-            duration: 4000,
-            isClosable: true,
           }),
         );
         navigation.navigate('Details');
@@ -34,9 +33,6 @@ export const Login = ({navigation}) => {
           JSON.stringify({
             title: 'Invalid details',
             description: 'Wrong Login Details',
-            status: 'error',
-            duration: 4000,
-            isClosable: true,
           }),
         );
       }
@@ -46,9 +42,13 @@ export const Login = ({navigation}) => {
   };
   React.useEffect(() => {
     (async () => {
-      let token = await AsyncStorage.getItem('intechnology');
+      try {
+        let token = await AsyncStorage.getItem('intechnology');
 
-      if (token) navigation.navigate('Details');
+        if (token) navigation.navigate('Details');
+      } catch (error) {
+        console.log(error);
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -83,7 +83,7 @@ export const Login = ({navigation}) => {
               onChangeText={handleChange('email')}
               style={styles.inputTag}
             />
-            <Text>{touched.email && errors.email}</Text>
+            <Text style={styles.error}>{touched.email && errors.email}</Text>
             <TextInput
               placeholder="Enter password"
               onBlur={handleBlur('password')}
@@ -91,9 +91,15 @@ export const Login = ({navigation}) => {
               onChangeText={handleChange('password')}
               style={styles.inputTag}
             />
-            <Text>{touched.password && errors.password}</Text>
-            <View styles={styles.buttonWrapper}>
-              <Button onPress={handleSubmit} title="Submit" />
+            <Text style={styles.error}>
+              {touched.password && errors.password}
+            </Text>
+            <View style={styles.buttonWrapper}>
+              <Button
+                style={styles.buttonStyle}
+                onPress={handleSubmit}
+                title="Submit"
+              />
               <Button
                 onPress={() => {
                   navigation.navigate('Signup');
@@ -110,16 +116,17 @@ export const Login = ({navigation}) => {
 
 const styles = StyleSheet.create({
   inputTag: {
-    fontSize: 20,
+    fontSize: 25,
     borderWidth: 2,
     borderColor: '#ddd',
+    color: 'black',
+    backgroundColor: 'white',
   },
-  formWrapper: {
-    width: '50%',
+  error: {
+    color: 'red',
   },
   buttonWrapper: {
     flexDirection: 'row',
-    padding: '5',
-    width: '30',
+    justifyContent: 'space-evenly',
   },
 });

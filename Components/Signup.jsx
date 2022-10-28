@@ -1,7 +1,14 @@
 import React from 'react';
 
 import {Formik, Field} from 'formik';
-import {TextInput, Button, StyleSheet, View, Text} from 'react-native';
+import {
+  TextInput,
+  Button,
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 import * as Yup from 'yup';
@@ -26,9 +33,6 @@ export const Signup = ({navigation}) => {
           JSON.stringify({
             title: 'Email already Exist',
             description: 'User already exist with this email ID',
-            status: 'error',
-            duration: 4000,
-            isClosable: true,
           }),
         );
       } else {
@@ -37,9 +41,6 @@ export const Signup = ({navigation}) => {
           JSON.stringify({
             title: 'Account created',
             description: 'Account created successfully going to login Page',
-            status: 'success',
-            duration: 4000,
-            isClosable: true,
           }),
         );
         navigation.navigate('Login');
@@ -50,7 +51,7 @@ export const Signup = ({navigation}) => {
   };
 
   return (
-    <View style={styles.formWrapper}>
+    <ScrollView style={styles.formWrapper}>
       <Formik
         initialValues={{
           name: '',
@@ -70,6 +71,8 @@ export const Signup = ({navigation}) => {
             .required('Required'),
           email: Yup.string().email().required('Required'),
           password: Yup.string().required('Required'),
+          gender: Yup.string().required('Required'),
+          role: Yup.string().required('Required'),
         })}>
         {({
           handleChange,
@@ -81,7 +84,7 @@ export const Signup = ({navigation}) => {
         }) => {
           return (
             <View>
-              {console.log(values)}
+              {console.log(values, errors, touched)}
               <TextInput
                 placeholder="Enter name"
                 onBlur={handleBlur('name')}
@@ -102,6 +105,8 @@ export const Signup = ({navigation}) => {
 
               <RNPickerSelect
                 style={pickerSelectStyles}
+                placeholder={{label: 'Select Gender', value: ''}}
+                onBlur={handleBlur('gender')}
                 useNativeAndroidPickerStyle={false}
                 onValueChange={handleChange('gender')}
                 items={[
@@ -109,8 +114,11 @@ export const Signup = ({navigation}) => {
                   {label: 'Female', value: 'female'},
                 ]}
               />
+              <Text style={styles.error}>{errors.gender}</Text>
               <RNPickerSelect
                 style={pickerSelectStyles}
+                onBlur={handleBlur('role')}
+                placeholder={{label: 'Select your Job Role', value: ''}}
                 useNativeAndroidPickerStyle={false}
                 onValueChange={handleChange('role')}
                 items={[
@@ -119,7 +127,7 @@ export const Signup = ({navigation}) => {
                   {label: 'Team lead', value: 'team lead'},
                 ]}
               />
-
+              <Text style={styles.error}>{errors.role}</Text>
               <TextInput
                 placeholder="Enter email"
                 onBlur={handleBlur('email')}
@@ -144,7 +152,7 @@ export const Signup = ({navigation}) => {
           );
         }}
       </Formik>
-    </View>
+    </ScrollView>
   );
 };
 
