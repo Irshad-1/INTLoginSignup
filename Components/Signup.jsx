@@ -141,6 +141,7 @@ export const Signup = ({navigation}) => {
                 placeholder="Enter password"
                 onBlur={handleBlur('password')}
                 value={values.password}
+                secureTextEntry={true}
                 onChangeText={handleChange('password')}
                 style={styles.inputTag}
               />

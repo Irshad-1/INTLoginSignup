@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView, Button, Text} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DataTable} from 'react-native-paper';
 
@@ -53,18 +54,23 @@ export const Details = ({navigation}) => {
     }
   };
 
-  React.useEffect(() => {
-    (async () => {
-      let token = await AsyncStorage.getItem('intechnology');
-      console.log('token', token);
-      if (!token) navigation.navigate('Login');
-      else {
-        getUser(token);
-      }
-    })();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useFocusEffect(
+    React.useCallback(
+      () => {
+        (async () => {
+          let token = await AsyncStorage.getItem('intechnology');
+          console.log('token', token);
+          if (!token) navigation.navigate('Login');
+          else {
+            getUser(token);
+          }
+        })();
+        return handleLogout;
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    ),
+  );
   return (
     <ScrollView>
       <View styles={styles.profileDetails}>
